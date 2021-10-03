@@ -61,6 +61,7 @@ func main() {
 		panic(err)
 	}
 	//
+
 	svc := service.New(logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger)
@@ -75,7 +76,4 @@ func main() {
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
-
-	// start and wait for stop signal
-
 }
