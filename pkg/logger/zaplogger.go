@@ -14,10 +14,12 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
 
+	log2 "github.com/go-kratos/kratos/v2/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -25,6 +27,11 @@ import (
 
 type structuredLogger struct {
 	zapLogger *zap.SugaredLogger
+}
+
+type ZapLogger struct {
+	log  *zap.Logger
+	Sync func() error
 }
 
 // getZapLevel converts log level string to zapcore.Level
@@ -167,4 +174,43 @@ func DefaultLogger() Logger {
 	return &structuredLogger{
 		zapLogger: sugar,
 	}
+}
+
+// DefaultLogger2 DefaultLogger creates and returns a new default logger.
+func DefaultLogger2() *ZapLogger {
+	productionConfig := zap.NewProductionConfig()
+	productionConfig.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	productionConfig.EncoderConfig.EncodeCaller = func(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+		_, caller.File, caller.Line, _ = runtime.Caller(8)
+		enc.AppendString(caller.FullPath())
+	}
+	logger, _ := productionConfig.Build()
+	defer logger.Sync()
+	sugar := logger.Sugar()
+	return &ZapLogger{
+		log: sugar.Desugar(),
+	}
+}
+
+func (l *ZapLogger) Log(level log2.Level, keyvals ...interface{}) error {
+	if len(keyvals) == 0 || len(keyvals)%2 != 0 {
+		l.log.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
+		return nil
+	}
+	// Zap.Field is used when keyvals pairs appear
+	var data []zap.Field
+	for i := 0; i < len(keyvals); i += 2 {
+		data = append(data, zap.Any(fmt.Sprint(keyvals[i]), fmt.Sprint(keyvals[i+1])))
+	}
+	switch level {
+	case log2.LevelDebug:
+		l.log.Debug("", data...)
+	case log2.LevelInfo:
+		l.log.Info("", data...)
+	case log2.LevelWarn:
+		l.log.Warn("", data...)
+	case log2.LevelError:
+		l.log.Error("", data...)
+	}
+	return nil
 }

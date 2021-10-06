@@ -7,7 +7,6 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.0.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.0.0-RC2
 	go.uber.org/zap v1.19.1
 	google.golang.org/genproto v0.0.0-20210929214142-896c89f843d2
 	google.golang.org/grpc v1.40.0

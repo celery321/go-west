@@ -10,7 +10,7 @@ import (
 	"gowest/internal/conf"
 	"gowest/internal/server"
 	"gowest/internal/service"
-	"os"
+	"gowest/pkg/logger"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -28,15 +28,21 @@ func init() {
 }
 
 func main() {
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"service.name", Name,
-		"service.version", Version,
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-	)
+	lo := logger.DefaultLogger2()
 
-	l := log.NewHelper(log.With(logger, "module", "main"))
-	l.Info("aaaaaaaaaaaaaaaaaaaaa")
+	logger := log.With(lo)
+
+	l := log.NewHelper(logger)
+	l.Info("1111111111111111111")
+
+	//logger := log.With(log.NewStdLogger(os.Stdout),
+	//	"service.name", Name,
+	//	"service.version", Version,
+	//	"ts", log.DefaultTimestamp,
+	//	"caller", log.DefaultCaller,
+	//)
+	//l := log.NewHelper(log.With(logger, "module", "main"))
+	//l.Info("aaaaaaaaaaaaaaaaaaaaa")
 
 	// init conf
 	c := config.New(
