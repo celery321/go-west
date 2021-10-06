@@ -55,11 +55,11 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
-
-	var rc conf.Registry
-	if err := c.Scan(&rc); err != nil {
-		panic(err)
-	}
+	// 服务注册
+	//var rc conf.Registry
+	//if err := c.Scan(&rc); err != nil {
+	//	panic(err)
+	//}
 	//
 
 	svc := service.New(logger)
