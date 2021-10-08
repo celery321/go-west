@@ -25,6 +25,8 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var Logg *zap.Logger
+
 type structuredLogger struct {
 	zapLogger *zap.SugaredLogger
 }
@@ -121,12 +123,12 @@ func (logConfig *Configuration) newZapLogger() *structuredLogger {
 
 	combinedCore := zapcore.NewTee(cores...)
 
-	logger := zap.New(combinedCore,
+	Logg = zap.New(combinedCore,
 		zap.AddCaller(),
-		zap.AddCallerSkip(3),
+		zap.AddCallerSkip(1),
 	)
-	defer logger.Sync()
-	sugar := logger.Sugar()
+	defer Logg.Sync()
+	sugar := Logg.Sugar()
 
 	return &structuredLogger{
 		zapLogger: sugar,
@@ -177,8 +179,9 @@ func DefaultLogger() Logger {
 }
 
 // DefaultLogger2 DefaultLogger creates and returns a new default logger.
-func DefaultLogger2() *ZapLogger {
+func DefaultLogger2() *structuredLogger {
 	productionConfig := zap.NewProductionConfig()
+	productionConfig.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	productionConfig.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	productionConfig.EncoderConfig.EncodeCaller = func(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 		_, caller.File, caller.Line, _ = runtime.Caller(8)
@@ -187,14 +190,14 @@ func DefaultLogger2() *ZapLogger {
 	logger, _ := productionConfig.Build()
 	defer logger.Sync()
 	sugar := logger.Sugar()
-	return &ZapLogger{
-		log: sugar.Desugar(),
+	return &structuredLogger{
+		zapLogger: sugar,
 	}
 }
 
-func (l *ZapLogger) Log(level log2.Level, keyvals ...interface{}) error {
+func (l *structuredLogger) Log2(level log2.Level, keyvals ...interface{}) error {
 	if len(keyvals) == 0 || len(keyvals)%2 != 0 {
-		l.log.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
+		l.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
 		return nil
 	}
 	// Zap.Field is used when keyvals pairs appear
@@ -204,13 +207,13 @@ func (l *ZapLogger) Log(level log2.Level, keyvals ...interface{}) error {
 	}
 	switch level {
 	case log2.LevelDebug:
-		l.log.Debug("", data...)
+		l.zapLogger.Debug(data)
 	case log2.LevelInfo:
-		l.log.Info("", data...)
+		l.zapLogger.Info(data)
 	case log2.LevelWarn:
-		l.log.Warn("", data...)
+		l.zapLogger.Warn(data)
 	case log2.LevelError:
-		l.log.Error("", data...)
+		l.zapLogger.Error(data)
 	}
 	return nil
 }

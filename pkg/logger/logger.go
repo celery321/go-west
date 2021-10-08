@@ -14,8 +14,16 @@
 // Package logger is the CNI Logger interface, using zap
 package logger
 
+import (
+	"context"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
 //Log is global variable so that log functions can be directly accessed
 var log Logger
+
+const loggerKey = iota
 
 //Fields Type to pass when we want to call WithFields for structured logging
 type Fields map[string]interface{}
@@ -65,4 +73,18 @@ func (logf *structuredLogger) isEmpty() bool {
 func New(inputLogConfig *Configuration) Logger {
 	log = inputLogConfig.newZapLogger()
 	return log
+}
+
+func NewContext(ctx context.Context, fields ...zapcore.Field) context.Context {
+	return context.WithValue(ctx, loggerKey, WithContext(ctx).With(fields...))
+}
+
+func WithContext(ctx context.Context) *zap.Logger {
+	if ctx == nil {
+		return Logg
+	}
+	if ctxLogger, ok := ctx.Value(loggerKey).(*zap.Logger); ok {
+		return ctxLogger
+	}
+	return Logg
 }
