@@ -5,13 +5,11 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
 	"gopkg.in/yaml.v3"
 	"gowest/internal/conf"
 	"gowest/internal/server"
 	"gowest/internal/service"
 	"gowest/pkg/logger"
-	"os"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -35,13 +33,12 @@ func main() {
 
 	logConfig := logger.LoadLogConfig()
 	lo := logger.New(logConfig)
-	lo.Info("22222222main")
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"service.name", Name,
-		"service.version", Version,
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-	)
+	//logger := log.With(log.NewStdLogger(os.Stdout),
+	//	"service.name", Name,
+	//	"service.version", Version,
+	//	"ts", log.DefaultTimestamp,
+	//	"caller", log.DefaultCaller,
+	//)
 	//l := log.NewHelper(log.With(logger, "module", "main"))
 	//l.Info("aaaaaaaaaaaaaaaaaaaaa")
 
@@ -70,11 +67,11 @@ func main() {
 	//
 
 	svc := service.New(lo)
-	httpSrv := server.NewHTTPServer(bc.Server, svc, logger)
-	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger)
+	httpSrv := server.NewHTTPServer(bc.Server, svc, lo)
+	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
 
 	app := kratos.New(
-		kratos.Logger(logger),
+		//kratos.Logger(lo),
 		kratos.Server(
 			httpSrv,
 			grpcSrv,

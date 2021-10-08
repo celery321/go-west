@@ -9,9 +9,7 @@ import (
 
 type Service struct {
 	v1.UnimplementedGreeterServer
-
-	uc *biz.GreeterUsecase
-
+	uc  *biz.GreeterUsecase
 	log logger.Logger
 }
 
