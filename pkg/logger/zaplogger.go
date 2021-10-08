@@ -115,11 +115,21 @@ func getEncoder() zapcore.Encoder {
 func (logConfig *Configuration) newZapLogger() *structuredLogger {
 	var cores []zapcore.Core
 
-	logLevel := getZapLevel(logConfig.LogLevel)
+	highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool {
+		return lev >= zap.ErrorLevel
+	})
 
+	lowPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool {
+		return lev < zap.ErrorLevel && lev >= zap.DebugLevel
+	})
+
+	//logLevel := getZapLevel(logConfig.LogLevel)
 	writer := getPluginLogFilePath(logConfig.LogLocation)
+	cores = append(cores, zapcore.NewCore(getEncoder(), writer, lowPriority))
 
-	cores = append(cores, zapcore.NewCore(getEncoder(), writer, logLevel))
+	//logLevel2 := getZapLevel(logConfig.LogLevel2)
+	writer2 := getPluginLogFilePath(logConfig.LogLocation2)
+	cores = append(cores, zapcore.NewCore(getEncoder(), writer2, highPriority))
 
 	combinedCore := zapcore.NewTee(cores...)
 

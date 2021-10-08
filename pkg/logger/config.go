@@ -18,23 +18,29 @@ import (
 )
 
 const (
-	defaultLogFilePath = "/var/log/aws-routed-eni/ipamd.log"
-	defaultLogLevel    = "Debug"
-	envLogLevel        = "AWS_VPC_K8S_CNI_LOGLEVEL"
-	envLogFilePath     = "AWS_VPC_K8S_CNI_LOG_FILE"
+	defaultLogFilePath  = "/var/log/go-west/access.log"
+	defaultLogLevel     = "Debug"
+	defaultLogFilePath2 = "/var/log/go-west/error.log"
+	defaultLogLevel2    = "ERROR"
+	envLogLevel         = "AWS_VPC_K8S_CNI_LOGLEVEL"
+	envLogFilePath      = "AWS_VPC_K8S_CNI_LOG_FILE"
 )
 
 // Configuration stores the config for the logger
 type Configuration struct {
-	LogLevel    string
-	LogLocation string
+	LogLevel     string
+	LogLevel2    string
+	LogLocation  string
+	LogLocation2 string
 }
 
 // LoadLogConfig returns the log configuration
 func LoadLogConfig() *Configuration {
 	return &Configuration{
-		LogLevel:    GetLogLevel(),
-		LogLocation: GetLogLocation(),
+		LogLevel:     GetLogLevel(),
+		LogLevel2:    GetLogLevel2(),
+		LogLocation:  GetLogLocation(),
+		LogLocation2: GetLogLocation2(),
 	}
 }
 
@@ -53,6 +59,27 @@ func GetLogLevel() string {
 	switch logLevel {
 	case "":
 		logLevel = defaultLogLevel
+		return logLevel
+	default:
+		return logLevel
+	}
+}
+
+// GetLogLocation2 GetLogLocation returns the log file path
+func GetLogLocation2() string {
+	logFilePath := os.Getenv(envLogFilePath)
+	if logFilePath == "" {
+		logFilePath = defaultLogFilePath2
+	}
+	return logFilePath
+}
+
+// GetLogLevel2 GetLogLevel returns the log level
+func GetLogLevel2() string {
+	logLevel := os.Getenv(envLogLevel)
+	switch logLevel {
+	case "":
+		logLevel = defaultLogLevel2
 		return logLevel
 	default:
 		return logLevel

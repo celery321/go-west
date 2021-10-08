@@ -21,5 +21,6 @@ func New(logger logger.Logger) *Service {
 // SayHello implements helloworld.GreeterServer
 func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	s.log.Infof("SayHello")
+	s.log.Error("error")
 	return &v1.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
