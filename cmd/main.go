@@ -15,7 +15,7 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "beer.cart.service"
+	Name = "go-west"
 	// Version is the version of the compiled software.
 	Version string
 	// flagconf is the config flag.
@@ -27,20 +27,8 @@ func init() {
 }
 
 func main() {
-
-	//logger := log.With(lo,)
-	//logger.Log(log.LevelInfo, "msg", "111")
-
 	logConfig := logger.LoadLogConfig()
 	lo := logger.New(logConfig)
-	//logger := log.With(log.NewStdLogger(os.Stdout),
-	//	"service.name", Name,
-	//	"service.version", Version,
-	//	"ts", log.DefaultTimestamp,
-	//	"caller", log.DefaultCaller,
-	//)
-	//l := log.NewHelper(log.With(logger, "module", "main"))
-	//l.Info("aaaaaaaaaaaaaaaaaaaaa")
 
 	// init conf
 	c := config.New(
