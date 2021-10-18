@@ -24,13 +24,16 @@ vendor/
 Thumbs.db
 .DS_Store
 
-# project
-*.cert
-*.key
-*.log
-bin/
+
 
 # Develop tools
 .vscode/
 .idea/
 *.swp
+
+
+# project
+*.cert
+*.key
+*.log
+bin/
