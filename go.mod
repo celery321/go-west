@@ -1,4 +1,4 @@
-module gowest
+module go-west
 
 go 1.16
 

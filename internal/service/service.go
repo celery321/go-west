@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	v1 "gowest/api/v1"
-	"gowest/internal/biz"
-	"gowest/pkg/logger"
+	v1 "go-west/api/v1"
+	"go-west/internal/biz"
+	"go-west/pkg/logger"
 )
 
 type Service struct {

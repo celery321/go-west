@@ -3,10 +3,10 @@ package server
 import (
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	v1 "gowest/api/v1"
-	"gowest/internal/conf"
-	"gowest/internal/service"
-	"gowest/pkg/logger"
+	v1 "go-west/api/v1"
+	"go-west/internal/conf"
+	"go-west/internal/service"
+	"go-west/pkg/logger"
 )
 
 // NewHTTPServer new a HTTP server.

@@ -6,10 +6,10 @@ import (
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"gopkg.in/yaml.v3"
-	"gowest/internal/conf"
-	"gowest/internal/server"
-	"gowest/internal/service"
-	"gowest/pkg/logger"
+	"go-west/internal/conf"
+	"go-west/internal/server"
+	"go-west/internal/service"
+	"go-west/pkg/logger"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
