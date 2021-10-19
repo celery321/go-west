@@ -2,14 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"gopkg.in/yaml.v3"
 	"go-west/internal/conf"
 	"go-west/internal/server"
 	"go-west/internal/service"
+	"go-west/pkg/boot"
 	"go-west/pkg/logger"
+	"gopkg.in/yaml.v3"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -58,9 +58,9 @@ func main() {
 	httpSrv := server.NewHTTPServer(bc.Server, svc, lo)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
 
-	app := kratos.New(
+	app := boot.New(
 		//kratos.Logger(lo),
-		kratos.Server(
+		boot.Server(
 			httpSrv,
 			grpcSrv,
 		))
