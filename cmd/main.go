@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/go-kratos/kratos/v2/log"
 	"go-west/internal/conf"
 	"go-west/internal/server"
 	"go-west/internal/service"
@@ -27,9 +28,16 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	logConfig := logger.LoadLogConfig()
-	//lo := logger.New(logConfig)
-	lo1 := logger.New2(logConfig)
+	lo := logger.New2(logConfig)
+	lo1 := log.With(lo,
+		"service.name", Name,
+		"service.version", Version,
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+	)
+
 	// init conf
 	c := config.New(
 		config.WithSource(
