@@ -59,7 +59,6 @@ func main() {
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
 
 	app := boot.New(
-		//kratos.Logger(lo),
 		boot.Server(
 			httpSrv,
 			grpcSrv,

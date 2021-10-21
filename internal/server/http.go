@@ -6,6 +6,7 @@ import (
 	v1 "go-west/api/v1"
 	"go-west/internal/conf"
 	"go-west/internal/service"
+	"go-west/pkg/http/response"
 	"go-west/pkg/logger"
 )
 
@@ -25,6 +26,11 @@ func NewHTTPServer(c *conf.Server, greeter *service.Service, logger logger.Logge
 	if c.Http.Timeout != nil {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
+	// error
+	opts = append(opts, http.ErrorEncoder(response.ErrorEncoder))
+	// response
+	opts = append(opts, http.ResponseEncoder(response.ResponseEncoder))
+
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	return srv
