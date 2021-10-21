@@ -21,7 +21,7 @@ import (
 )
 
 //Log is global variable so that log functions can be directly accessed
-var log Logger
+var log2 Logger
 
 const loggerKey = iota
 
@@ -58,11 +58,11 @@ func Get() Logger {
 	var logf = &structuredLogger{}
 	if logf.isEmpty() {
 		logConfig := LoadLogConfig()
-		log = New(logConfig)
-		return log
+		log2 = New(logConfig)
+		return log2
 	}
-	log = logf
-	return log
+	log2 = logf
+	return log2
 }
 
 func (logf *structuredLogger) isEmpty() bool {
@@ -71,8 +71,8 @@ func (logf *structuredLogger) isEmpty() bool {
 
 //New logger initializes logger
 func New(inputLogConfig *Configuration) Logger {
-	log = inputLogConfig.newZapLogger()
-	return log
+	log2 = inputLogConfig.newZapLogger()
+	return log2
 }
 
 func NewContext(ctx context.Context, fields ...zapcore.Field) context.Context {

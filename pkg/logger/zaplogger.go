@@ -30,7 +30,7 @@ type structuredLogger struct {
 }
 
 type ZapLogger struct {
-	log  *zap.Logger
+	Log  *zap.SugaredLogger
 	Sync func() error
 }
 

@@ -28,8 +28,8 @@ func init() {
 
 func main() {
 	logConfig := logger.LoadLogConfig()
-	lo := logger.New(logConfig)
-
+	//lo := logger.New(logConfig)
+	lo1 := logger.New2(logConfig)
 	// init conf
 	c := config.New(
 		config.WithSource(
@@ -54,9 +54,9 @@ func main() {
 	//}
 	//
 
-	svc := service.New(lo)
-	httpSrv := server.NewHTTPServer(bc.Server, svc, lo)
-	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
+	svc := service.New(lo1)
+	httpSrv := server.NewHTTPServer(bc.Server, svc, lo1)
+	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo1)
 
 	app := boot.New(
 		boot.Server(
