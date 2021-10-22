@@ -41,8 +41,6 @@ func main() {
 	lo11 := log.With(lo1,
 		"service.name", Name,
 		"service.version", Version,
-		//"ts", log.DefaultTimestamp,
-		//"caller", log.DefaultCaller,
 	)
 
 	// init conf

@@ -7,6 +7,7 @@ import (
 	v1 "go-west/api/v1"
 	"go-west/internal/conf"
 	"go-west/internal/service"
+	"go-west/pkg/http/middleware/logging"
 )
 
 // NewGRPCServer new a gRPC server.
@@ -14,6 +15,7 @@ func NewGRPCServer(c *conf.Server, greeter *service.Service, logger log.Logger) 
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			logging.Server(logger),
 		),
 	}
 	if c.Grpc.Network != "" {
