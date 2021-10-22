@@ -29,11 +29,6 @@ type structuredLogger struct {
 	zapLogger *zap.SugaredLogger
 }
 
-type ZapLogger struct {
-	Log  *zap.SugaredLogger
-	Sync func() error
-}
-
 // getZapLevel converts log level string to zapcore.Level
 func getZapLevel(inputLogLevel string) zapcore.Level {
 	lvl := strings.ToLower(inputLogLevel)

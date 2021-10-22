@@ -7,8 +7,7 @@ import (
 
 // SayHello implements helloworld.GreeterServer
 func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	s.log.Infof("SayHello")
-
+	s.log.Info("SayHello")
 	if in.GetName() == "error" {
 		return nil, v1.ErrorUserNotFound("user not found: %s", in.GetName())
 	}
