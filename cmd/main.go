@@ -9,7 +9,7 @@ import (
 	"go-west/internal/server"
 	"go-west/internal/service"
 	"go-west/pkg/boot"
-	log2 "go-west/pkg/logger2"
+	"go-west/pkg/logger"
 	"gopkg.in/yaml.v3"
 )
 
@@ -29,16 +29,9 @@ func init() {
 
 func main() {
 	flag.Parse()
-	//logConfig := logger.LoadLogConfig()
-	//lo0 := logger.New2(logConfig)
-	//lo01 := log.With(lo0,
-	//	"service.name", Name,
-	//	"service.version", Version,
-	//	"ts", log.DefaultTimestamp,
-	//	"caller", log.DefaultCaller,
-	//)
-	lo1 := log2.NewZapLogger()
-	lo11 := log.With(lo1,
+
+	logger := logger.NewZapLogger()
+	lo := log.With(logger,
 		"service.name", Name,
 		"service.version", Version,
 	)
@@ -67,9 +60,9 @@ func main() {
 	//}
 	//
 
-	svc := service.New(lo11)
-	httpSrv := server.NewHTTPServer(bc.Server, svc, lo11)
-	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo11)
+	svc := service.New(lo)
+	httpSrv := server.NewHTTPServer(bc.Server, svc, lo)
+	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
 
 	app := boot.New(
 		boot.Server(
