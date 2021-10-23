@@ -30,12 +30,6 @@ func init() {
 func main() {
 	flag.Parse()
 
-	logger := logger.NewZapLogger()
-	lo := log.With(logger,
-		"service.name", Name,
-		"service.version", Version,
-	)
-
 	// init conf
 	c := config.New(
 		config.WithSource(
@@ -59,10 +53,16 @@ func main() {
 	//	panic(err)
 	//}
 	//
+	loggerInstance := logger.NewZapLogger(bc.Server.Log)
+	logger := log.With(loggerInstance,
+		"service.name", Name,
+		"service.version", Version,
+	)
 
-	svc := service.New(lo)
-	httpSrv := server.NewHTTPServer(bc.Server, svc, lo)
-	grpcSrv := server.NewGRPCServer(bc.Server, svc, lo)
+
+	svc := service.New(logger)
+	httpSrv := server.NewHTTPServer(bc.Server, svc, logger)
+	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger)
 
 	app := boot.New(
 		boot.Server(

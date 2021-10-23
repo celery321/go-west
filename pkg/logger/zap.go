@@ -3,10 +3,12 @@ package logger
 import (
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	"go-west/internal/conf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -73,15 +75,27 @@ func getZapLevel(inputLogLevel string) zapcore.Level {
 
 
 // NewZapLogger NewZap NewHelper new a logger helper.
-func NewZapLogger() *ZapHelper {
+func NewZapLogger(c *conf.Server_LOG) *ZapHelper {
 	var cores []zapcore.Core
 
-	logLevel := getZapLevel("Debug")
-
-	writer := getPluginLogFilePath("w.log")
-
-	cores = append(cores, zapcore.NewCore(getEncoder(), writer, logLevel))
-
+	lowPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool {
+		return lev < zap.ErrorLevel && lev >= zap.DebugLevel
+	})
+	highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool {
+		return lev >= zap.ErrorLevel
+	})
+	if c.Path == "" || c.Path == "stdout" {
+		logLevel := getZapLevel("Debug")
+		writer := getPluginLogFilePath(c.Path)
+		cores = append(cores, zapcore.NewCore(getEncoder(), writer, logLevel))
+	} else {
+		accessPath := path.Join(c.Path, "access.log")
+		errorPath := path.Join(c.Path, "error.log")
+		accessLog := getPluginLogFilePath(accessPath)
+		errorLog := getPluginLogFilePath(errorPath)
+		cores = append(cores, zapcore.NewCore(getEncoder(), accessLog, lowPriority))
+		cores = append(cores, zapcore.NewCore(getEncoder(), errorLog, highPriority))
+	}
 	combinedCore := zapcore.NewTee(cores...)
 
 	logger := zap.New(combinedCore,

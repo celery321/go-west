@@ -15,6 +15,9 @@ message Trace {
     string endpoint = 1;
 }
 
+
+
+
 message Server {
     message HTTP {
         string network = 1;
@@ -26,8 +29,12 @@ message Server {
         string addr = 2;
         google.protobuf.Duration timeout = 3;
     }
+    message LOG {
+        string path = 1;
+    }
     HTTP http = 1;
     GRPC grpc = 2;
+    LOG log = 3;
 }
 
 message Data {
