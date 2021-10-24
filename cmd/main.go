@@ -60,6 +60,7 @@ func main() {
 	)
 
 
+
 	svc := service.New(logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger)

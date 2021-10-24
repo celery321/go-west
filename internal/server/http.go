@@ -8,6 +8,7 @@ import (
 	"go-west/internal/conf"
 	"go-west/internal/service"
 	"go-west/pkg/http/middleware/logging"
+	"go-west/pkg/http/middleware/sky"
 	"go-west/pkg/http/response"
 )
 
@@ -17,6 +18,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.Service, logger log.Logger) 
 		http.Middleware(
 			recovery.Recovery(),
 			logging.Server(logger),
+			sky.Server(),
 		),
 	}
 	if c.Http.Network != "" {

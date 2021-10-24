@@ -8,8 +8,8 @@ server:
     addr: 0.0.0.0:909
     timeout: 1s
   log:
-    path: /var/log/go-west
-#    path:
+#    path: /var/log/go-west
+    path:
 
 data:
   mongodb:
