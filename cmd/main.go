@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"github.com/SkyAPM/go2sky"
+	"github.com/SkyAPM/go2sky/reporter"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
@@ -11,6 +14,7 @@ import (
 	"go-west/pkg/boot"
 	"go-west/pkg/logger"
 	"gopkg.in/yaml.v3"
+	"time"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -59,11 +63,15 @@ func main() {
 		"service.version", Version,
 	)
 
-
+	rp, err := reporter.NewGRPCReporter("114.67.201.131:11800", reporter.WithCheckInterval(time.Second))
+	if err != nil{
+		fmt.Printf("create gosky reporter failed!")
+	}
+	tracer, err := go2sky.NewTracer("test-demo1", go2sky.WithReporter(rp))
 
 	svc := service.New(logger)
-	httpSrv := server.NewHTTPServer(bc.Server, svc, logger)
-	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger)
+	httpSrv := server.NewHTTPServer(bc.Server, svc, logger, tracer)
+	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger, tracer)
 
 	app := boot.New(
 		boot.Server(
