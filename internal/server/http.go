@@ -8,6 +8,7 @@ import (
 	"go-west/internal/conf"
 	"go-west/internal/service"
 	"go-west/pkg/http/middleware/logging"
+	"go-west/pkg/http/middleware/metadata"
 	skywalk "go-west/pkg/http/middleware/skywalking"
 	"go-west/pkg/http/response"
 	"go-west/pkg/log"
@@ -18,6 +19,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.Service, logger log.Logger, 
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			metadata.Server(),
 			skywalk.Server(tracer),
 			logging.Server(logger),
 		),

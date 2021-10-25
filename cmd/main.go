@@ -57,7 +57,7 @@ func main() {
 	if err != nil{
 		fmt.Printf("create gosky reporter failed!")
 	}
-	tracer, err := go2sky.NewTracer("go-west", go2sky.WithReporter(rp))
+	tracer, err := go2sky.NewTracer(Name, go2sky.WithReporter(rp))
 
 	loggerInstance := log.NewZapLogger(bc.Server.Log)
 	logger := log.With(loggerInstance,
@@ -65,7 +65,6 @@ func main() {
 		"service.version", Version,
 		"trace.id",   skywalk.TraceID() ,
 	)
-
 	svc := service.New(logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger, tracer)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger, tracer)

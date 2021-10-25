@@ -129,6 +129,7 @@ func Client(tracer *go2sky.Tracer, opts ...Option) middleware.Middleware {
 
 func TraceID() log.Valuer {
 	return func(ctx context.Context) interface{} {
+		fmt.Printf("aaa====%v\n", ctx)
 		if id := go2sky.TraceID(ctx); id != go2sky.EmptyTraceID {
 			return id
 		}

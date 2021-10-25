@@ -15,6 +15,7 @@ type Response struct {
 	Code    int         `json:"code" form:"code"`
 	Message string      `json:"message" form:"message"`
 	Data    interface{} `json:"data" form:"data"`
+	ReqId   string `json:"req_id"`
 }
 
 func New()  *Response{
@@ -30,8 +31,8 @@ func ResponseEncoder(w stdHttp.ResponseWriter, r *stdHttp.Request, v interface{}
 	reply := New()
 	reply.Code = 200
 	reply.Data = v
+	//reply.ReqId = fmt.Sprintf("%v", skywalk.TraceID())
 	reply.Message = ""
-
 	codec, _ := http.CodecForRequest(r, "Accept")
 	data, err := codec.Marshal(reply)
 	if err != nil {
