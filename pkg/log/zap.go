@@ -1,8 +1,7 @@
-package logger
+package log
 
 import (
 	"fmt"
-	"github.com/go-kratos/kratos/v2/log"
 	"go-west/internal/conf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -12,7 +11,7 @@ import (
 	"strings"
 )
 
-var _ log.Logger = (*ZapHelper)(nil)
+var _  Logger = (*ZapHelper)(nil)
 
 // ZapHelper Helper is a logger helper.
 type ZapHelper struct {
@@ -112,7 +111,7 @@ func NewZapLogger(c *conf.Server_LOG) *ZapHelper {
 
 
 // Log print the kv pairs log.
-func (logf *ZapHelper) Log(level log.Level, keyvals ...interface{}) error {
+func (logf *ZapHelper) Log(level Level, keyvals ...interface{}) error {
 	if len(keyvals) == 0 || len(keyvals)%2 != 0 {
 		logf.zapLogger.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
 		return nil
@@ -124,13 +123,13 @@ func (logf *ZapHelper) Log(level log.Level, keyvals ...interface{}) error {
 	}
 
 	switch level {
-	case log.LevelDebug:
+	case LevelDebug:
 		logf.zapLogger.Desugar().Debug("", data...)
-	case log.LevelInfo:
+	case LevelInfo:
 		logf.zapLogger.Desugar().Info("", data...)
-	case log.LevelWarn:
+	case LevelWarn:
 		logf.zapLogger.Desugar().Warn("", data...)
-	case log.LevelError:
+	case LevelError:
 		logf.zapLogger.Desugar().Error("", data...)
 	}
 	return nil

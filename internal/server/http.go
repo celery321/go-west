@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/SkyAPM/go2sky"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	v1 "go-west/api/v1"
@@ -11,6 +10,7 @@ import (
 	"go-west/pkg/http/middleware/logging"
 	skywalk "go-west/pkg/http/middleware/skywalking"
 	"go-west/pkg/http/response"
+	"go-west/pkg/log"
 )
 
 // NewHTTPServer new a HTTP server.
@@ -18,8 +18,8 @@ func NewHTTPServer(c *conf.Server, greeter *service.Service, logger log.Logger, 
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			logging.Server(logger),
 			skywalk.Server(tracer),
+			logging.Server(logger),
 		),
 	}
 	if c.Http.Network != "" {

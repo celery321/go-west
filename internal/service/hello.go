@@ -11,7 +11,8 @@ func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloR
 		s.log.Error("error")
 		return nil, v1.ErrorUserNotFound("user not found: %s", in.GetName())
 	}
-	s.log.Info("info")
+	s.log.WithContext(ctx).Info(  "aaaaaa")
+
 	return &v1.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 

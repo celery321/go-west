@@ -7,12 +7,12 @@ import (
 	"github.com/SkyAPM/go2sky/reporter"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
 	"go-west/internal/conf"
 	"go-west/internal/server"
 	"go-west/internal/service"
 	"go-west/pkg/boot"
-	"go-west/pkg/logger"
+	skywalk "go-west/pkg/http/middleware/skywalking"
+	"go-west/pkg/log"
 	"gopkg.in/yaml.v3"
 	"time"
 )
@@ -51,23 +51,20 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
-	// 服务注册
-	//var rc conf.Registry
-	//if err := c.Scan(&rc); err != nil {
-	//	panic(err)
-	//}
-	//
-	loggerInstance := logger.NewZapLogger(bc.Server.Log)
-	logger := log.With(loggerInstance,
-		"service.name", Name,
-		"service.version", Version,
-	)
 
+	// init trace
 	rp, err := reporter.NewGRPCReporter("114.67.201.131:11800", reporter.WithCheckInterval(time.Second))
 	if err != nil{
 		fmt.Printf("create gosky reporter failed!")
 	}
-	tracer, err := go2sky.NewTracer("test-demo1", go2sky.WithReporter(rp))
+	tracer, err := go2sky.NewTracer("go-west", go2sky.WithReporter(rp))
+
+	loggerInstance := log.NewZapLogger(bc.Server.Log)
+	logger := log.With(loggerInstance,
+		"service.name", Name,
+		"service.version", Version,
+		"trace.id",   skywalk.TraceID() ,
+	)
 
 	svc := service.New(logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger, tracer)

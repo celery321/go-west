@@ -19,10 +19,10 @@ package skywalk
 import (
 	"context"
 	"fmt"
+	"go-west/pkg/log"
 	"time"
 
 	"github.com/SkyAPM/go2sky"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"

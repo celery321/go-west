@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
 	v1 "go-west/api/v1"
 	"go-west/internal/biz"
+	"go-west/pkg/log"
 )
 
 
