@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// init trace
-	rp, err := reporter.NewGRPCReporter("114.67.201.131:11800", reporter.WithCheckInterval(time.Second))
+	rp, err := reporter.NewGRPCReporter(bc.Trace.Endpoint, reporter.WithCheckInterval(time.Second))
 	if err != nil{
 		fmt.Printf("create gosky reporter failed!")
 	}

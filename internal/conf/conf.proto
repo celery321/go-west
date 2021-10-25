@@ -13,8 +13,8 @@ message Bootstrap {
 
 message Trace {
     string endpoint = 1;
-}
 
+}
 
 
 

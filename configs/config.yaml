@@ -1,5 +1,5 @@
 trace:
-  endpoint: httpen://127.0.0.1:14268/api/traces
+  endpoint: 114.67.201.131:11800
 server:
   http:
     addr: 0.0.0.0:809
