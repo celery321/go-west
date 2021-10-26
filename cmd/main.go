@@ -65,7 +65,7 @@ func main() {
 		"service.version", Version,
 		"trace.id",   skywalk.TraceID() ,
 	)
-	svc := service.New(logger)
+	svc := service.New(bc.Data, logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger, tracer)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger, tracer)
 

@@ -2,7 +2,7 @@ package biz
 
 import (
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
+	"go-west/pkg/log"
 )
 
 type Greeter struct {
