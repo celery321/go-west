@@ -1,0 +1,7 @@
+{
+  "type": "swagger",
+  "token": "36c69abb0815501c6d014133e6570d3300e1bbe51e4f5ec14bdce223a01d6aca",
+  "file": "go-west.swagger.json",
+  "merge": "mergin",
+  "server": "http://10.1.40.61:40001"
+}

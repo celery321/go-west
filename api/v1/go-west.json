@@ -1,0 +1,7 @@
+{
+  "type": "swagger",
+  "token": "bd91302880425cdaf58573b69436a854f78057cf5789fae9bc91b648c8ab941d",
+  "file": "hello.swagger.json",
+  "merge": "good",
+  "server": "http://10.1.40.61:40001"
+}
