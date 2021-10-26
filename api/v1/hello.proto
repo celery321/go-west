@@ -36,5 +36,5 @@ message HelloRequest {
 // The response message containing the greetings
 message HelloReply {
   string req_id = 1;
-  string message = 2;
+  string message = 3;
 }

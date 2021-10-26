@@ -15,11 +15,13 @@ type Response struct {
 	Code    int         `json:"code" form:"code"`
 	Message string      `json:"message" form:"message"`
 	Data    interface{} `json:"data" form:"data"`
-	ReqId   string `json:"req_id"`
 }
 
 func New()  *Response{
-	return &Response{}
+	return &Response{
+		Code: 200,
+		Message: "",
+	}
 }
 
 // ContentType returns the content-type with base prefix.
@@ -27,12 +29,11 @@ func ContentType(subtype string) string {
 	return strings.Join([]string{baseContentType, subtype}, "/")
 }
 
+
 func ResponseEncoder(w stdHttp.ResponseWriter, r *stdHttp.Request, v interface{}) error {
 	reply := New()
-	reply.Code = 200
 	reply.Data = v
-	//reply.ReqId = fmt.Sprintf("%v", skywalk.TraceID())
-	reply.Message = ""
+
 	codec, _ := http.CodecForRequest(r, "Accept")
 	data, err := codec.Marshal(reply)
 	if err != nil {
@@ -40,7 +41,11 @@ func ResponseEncoder(w stdHttp.ResponseWriter, r *stdHttp.Request, v interface{}
 	}
 	w.Header().Set("Content-Type", ContentType(codec.Name()))
 	w.WriteHeader(stdHttp.StatusOK)
-	w.Write(data)
+	_, err = w.Write(data)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
