@@ -83,6 +83,8 @@ github.com/go-kratos/aegis v0.1.1 h1:QnIwUwVMnwIU8hZ+p4LKJnSEd1IE6qBBPTV7fgr3XQI
 github.com/go-kratos/aegis v0.1.1/go.mod h1:jYeSQ3Gesba478zEnujOiG5QdsyF3Xk/8owFUeKcHxw=
 github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211023135357-ea1a0c30ed06 h1:vqTDn3c2rxAKC4CbPEdM2YRmxug82XX0r3CJJLTG/aY=
 github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211023135357-ea1a0c30ed06/go.mod h1:JCyEhxr60D009B1/LzMhsGqXKb3hXiqJfmfwGxz5B4Q=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211026014023-806a6b3e13cf h1:bJFRBs2GdbZtZ4W3lvLbexyl8yXVxaKcEHdUYazHrUY=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211026014023-806a6b3e13cf/go.mod h1:JCyEhxr60D009B1/LzMhsGqXKb3hXiqJfmfwGxz5B4Q=
 github.com/go-kratos/kratos/v2 v2.1.0/go.mod h1:aJv7++0gDtfncp+2e3Ae32ElyFd77WS+pdXCRTSFll0=
 github.com/go-kratos/kratos/v2 v2.1.1 h1:1LDk5giwnlnxr7Jy8oJZyhgFlLlB1VtuoZxc+rs01tI=
 github.com/go-kratos/kratos/v2 v2.1.1/go.mod h1:aJv7++0gDtfncp+2e3Ae32ElyFd77WS+pdXCRTSFll0=

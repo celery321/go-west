@@ -6,7 +6,7 @@ require (
 	github.com/SkyAPM/go2sky v1.2.0
 	github.com/envoyproxy/protoc-gen-validate v0.6.2 // indirect
 	github.com/go-kratos/aegis v0.1.1
-	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211023135357-ea1a0c30ed06 // indirect
+	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20211026014023-806a6b3e13cf // indirect
 	github.com/go-kratos/kratos/v2 v2.1.1
 	github.com/golang-jwt/jwt/v4 v4.0.0
 	github.com/golang/protobuf v1.5.2

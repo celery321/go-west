@@ -10,6 +10,7 @@ import (
 	"go-west/pkg/http/middleware/logging"
 	"go-west/pkg/http/middleware/metadata"
 	skywalk "go-west/pkg/http/middleware/skywalking"
+	"go-west/pkg/http/middleware/validate"
 	"go-west/pkg/log"
 )
 
@@ -18,6 +19,7 @@ func NewGRPCServer(c *conf.Server, greeter *service.Service, logger log.Logger,t
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			validate.Validator(),
 			metadata.Server(),
 			skywalk.Server(tracer),
 			logging.Server(logger),
