@@ -3,13 +3,13 @@ package boot
 import (
 	"context"
 	"errors"
+	"go-west/pkg/log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 	"time"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport"
 

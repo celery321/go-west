@@ -332,9 +332,9 @@ func (db *conn) ping(c context.Context) (err error) {
 		_metricReqErr.Inc(db.addr, db.addr, "ping", "breaker")
 		return
 	}
-	_, c, cancel := db.conf.ExecTimeout.Shrink(c)
+	// todo _, c, cancel := db.conf.ExecTimeout.Shrink(c)
 	err = db.PingContext(c)
-	cancel()
+	// todo cancel()
 	db.onBreaker(&err)
 	_metricReqDur.Observe(int64(time.Since(now)/time.Millisecond), db.addr, db.addr, "ping")
 	if err != nil {

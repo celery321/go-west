@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/SkyAPM/go2sky"
 	v1 "go-west/api/v1"
 	"go-west/internal/biz"
@@ -23,6 +24,8 @@ func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloR
 
 	}
 
+	err = s.data.Ping(ctx)
+	fmt.Printf("err==%v\n", err)
 	req := &v1.HelloReply{}
 	req.ReqId = go2sky.TraceID(ctx)
 	req.Message = "Hello" + in.GetName()

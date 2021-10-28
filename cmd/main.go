@@ -70,6 +70,10 @@ func main() {
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger, tracer)
 
 	app := boot.New(
+		boot.Name(Name),
+		boot.Version(Version),
+		//boot.Metadata(map[string]string{"a":"1"}),
+		boot.Logger(logger),
 		boot.Server(
 			httpSrv,
 			grpcSrv,

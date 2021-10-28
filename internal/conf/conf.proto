@@ -42,7 +42,26 @@ message Data {
         string uri = 1;
         string database = 2;
     }
+    message Mysql {
+        string       dsn   = 1;
+        repeated string ReadDSN = 2;
+        int64 Active              = 3;
+        int64 Idle                = 4;
+        google.protobuf.Duration IdleTimeout = 5;
+        google.protobuf.Duration QueryTimeout = 6;
+        google.protobuf.Duration ExecTimeout   = 7;
+        google.protobuf.Duration TranTimeout   = 8;
+        Breaker     Breaker = 9;
+    }
+    message Breaker {
+        bool SwitchOff = 1; // breaker switch,default off.
+        float K = 2;  // Google
+        google.protobuf.Duration Window = 3;
+        int32 Bucket = 4;
+        int64 Request  = 5;
+    }
     MongoDB mongodb = 1;
+    Mysql mysql = 2;
 }
 
 message Registry {

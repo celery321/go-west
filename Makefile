@@ -2,7 +2,7 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 APP_RELATIVE_PATH=$(shell a=`basename $$PWD` && cd .. && b=`basename $$PWD` && echo $$b/$$a)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
-API_PROTO_FILES=$(shell     find /root/go-west/api -name *.proto)
+API_PROTO_FILES=$(shell     find api -name *.proto)
 KRATOS_VERSION=$(shell go mod graph |grep go-kratos/kratos/v2 |head -n 1 |awk -F '@' '{print $$2}')
 KRATOS=$(GOPATH)/pkg/mod/github.com/go-kratos/kratos/v2@$(KRATOS_VERSION)
 APP_NAME=$(shell echo $(APP_RELATIVE_PATH) | sed -En "s/\//-/p")
@@ -57,7 +57,7 @@ swagger:
 # generate internal proto struct
 proto:
 	protoc --proto_path=. \
-           --proto_path=../../../third_party \
+           --proto_path=third_party \
            --go_out=paths=source_relative:. \
            $(INTERNAL_PROTO_FILES)
 
