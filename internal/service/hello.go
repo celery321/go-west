@@ -2,33 +2,48 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/SkyAPM/go2sky"
 	v1 "go-west/api/v1"
 	"go-west/internal/biz"
 )
 
-// SayHello implements helloworld.GreeterServer
-func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
+// GetHello SayHello implements helloworld.GreeterServer
+func (s *Service) GetHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	if in.Name == "error" {
 		s.log.Error("error")
 		return nil, v1.ErrorUserNotFound("user not found: %s", in.GetName())
 	}
 	s.log.WithContext(ctx).Info("aaaaaaaaa")
 	//go2sky.ctxKey
+	if err := s.data.Ping(ctx); err != nil {
+		s.log.WithContext(ctx).Infof("ping", err)
+	}
+
 	b := &biz.Greeter{
-		Hello: "abc",
+		Hello: in.Name,
 	}
-	err := s.uc.Create(ctx, b)
+	l, err := s.uc.Create(ctx, b)
  	if err != nil {
-
+		s.log.WithContext(ctx).Errorf("s.uc.Create", err)
+	}
+	for _, v := range(l) {
+		s.log.WithContext(ctx).Info("l", v.Hello)
 	}
 
-	err = s.data.Ping(ctx)
-	fmt.Printf("err==%v\n", err)
 	req := &v1.HelloReply{}
 	req.ReqId = go2sky.TraceID(ctx)
 	req.Message = "Hello" + in.GetName()
 	return req, nil
 }
 
+func (s *Service) SetHello(ctx context.Context, in *v1.HelloRequest)  (*v1.CreateClusterRes, error){
+	req := &biz.Greeter{
+		Hello: in.Name,
+	}
+	err := s.uc.Set(ctx, req)
+	if err != nil {
+		s.log.WithContext(ctx).Errorf("s.uc.Set", err)
+	}
+
+	return &v1.CreateClusterRes{}, nil
+}

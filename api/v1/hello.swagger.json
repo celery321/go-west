@@ -16,9 +16,42 @@
     "application/json"
   ],
   "paths": {
-    "/helloworld/{name}": {
+    "/hello": {
+      "post": {
+        "summary": "set 服务",
+        "operationId": "Greeter_SetHello",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateClusterRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HelloRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Greeter"
+        ]
+      }
+    },
+    "/hello/{name}": {
       "get": {
-        "summary": "hello服务",
+        "summary": "get 服务",
         "operationId": "Greeter_SayHello",
         "responses": {
           "200": {
@@ -41,39 +74,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          }
-        ],
-        "tags": [
-          "Greeter"
-        ]
-      }
-    },
-    "/v1/greeter/say_hello": {
-      "post": {
-        "summary": "hello服务",
-        "operationId": "Greeter_SayHello2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HelloReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HelloRequest"
-            }
           }
         ],
         "tags": [
@@ -110,10 +110,13 @@
         }
       }
     },
+    "v1CreateClusterRes": {
+      "type": "object"
+    },
     "v1HelloReply": {
       "type": "object",
       "properties": {
-        "req_id": {
+        "reqId": {
           "type": "string"
         },
         "message": {

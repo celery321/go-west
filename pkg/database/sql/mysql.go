@@ -1,7 +1,6 @@
 package sql
 
 import (
-	"fmt"
 	"github.com/go-kratos/kratos/pkg/log"
 	"github.com/go-kratos/kratos/pkg/net/netutil/breaker"
 	"github.com/go-kratos/kratos/pkg/time"
@@ -36,20 +35,18 @@ func DSN(dsn string) Option {
 func NewMySQL(opts ...Option) (db *DB) {
 	options := &Config{
 			IdleTimeout: 400,
-			QueryTimeout: 500,
-			ExecTimeout: 500,
-			TranTimeout: 500,
+			QueryTimeout: 50000000,
+			ExecTimeout: 50000000,
+			TranTimeout: 50000000,
 	}
 	for _, o := range opts {
 		o(options)
 	}
-	fmt.Printf("optioos=[%v]\n", options)
 	if options.QueryTimeout == 0 || options.ExecTimeout == 0 || options.TranTimeout == 0 {
 		panic("mysql must be set query/execute/transction timeout")
 	}
 	db, err := Open(options)
 	if err != nil {
-		fmt.Printf("open err=%v\n", err)
 		log.Error("open mysql error(%v)", err)
 		panic(err)
 	}

@@ -14,14 +14,14 @@ init:
 	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2
-	go get -d github.com/envoyproxy/protoc-gen-validate
-
+	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2
+	go get -u github.com/envoyproxy/protoc-gen-validate
 	go get -u github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 .PHONY: grpc
 # generate grpc code
 grpc:
 	 cd  /$(APP_RELATIVE_PATH) && protoc --proto_path=. \
-           --proto_path=../../../third_party \
+           --proto_path=third_party \
            --go_out=paths=source_relative:. \
            --go-grpc_out=paths=source_relative:. \
            $(API_PROTO_FILES)
@@ -38,8 +38,8 @@ http:
 .PHONY: errors
 # generate errors code
 errors:
-	cd ../../../api/$(APP_RELATIVE_PATH) && protoc --proto_path=. \
-           --proto_path=../../../third_party \
+	cd /$(APP_RELATIVE_PATH) && protoc --proto_path=. \
+           --proto_path=third_party \
            --go_out=paths=source_relative:. \
            --go-errors_out=paths=source_relative:. \
            $(API_PROTO_FILES)
@@ -47,8 +47,8 @@ errors:
 .PHONY: swagger
 # generate swagger
 swagger:
-	cd ../../../api/$(APP_RELATIVE_PATH) && protoc --proto_path=. \
-	        --proto_path=../../../third_party \
+	cd /$(APP_RELATIVE_PATH) && protoc --proto_path=. \
+	        --proto_path=third_party \
 	        --openapiv2_out . \
 	        --openapiv2_opt logtostderr=true \
            $(API_PROTO_FILES)
@@ -99,7 +99,8 @@ api: grpc http swagger errors
 
 .PHONY: all
 # generate all
-all: grpc http proto generate build test
+#all: grpc http proto generate build test
+all: grpc http proto validate errors
 
 .PHONY: validate
 # generate validate

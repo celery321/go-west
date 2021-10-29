@@ -309,9 +309,9 @@ func (db *conn) exec(c context.Context, query string, args ...interface{}) (res 
 		_metricReqErr.Inc(db.addr, db.addr, "exec", "breaker")
 		return
 	}
-	_, c, cancel := db.conf.ExecTimeout.Shrink(c)
+	// todo _, c, cancel := db.conf.ExecTimeout.Shrink(c)
 	res, err = db.ExecContext(c, query, args...)
-	cancel()
+	// todo cancel()
 	db.onBreaker(&err)
 	_metricReqDur.Observe(int64(time.Since(now)/time.Millisecond), db.addr, db.addr, "exec")
 	if err != nil {
