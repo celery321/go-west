@@ -16,6 +16,7 @@ service Greeter {
     option (google.api.http) = { get: "/hello/{name}" };
   }
   // set 服务
+  // todo google.protobuf.Empty 代替CreateClusterRes
   rpc SetHello (HelloRequest) returns (CreateClusterRes) {
     option (google.api.http) = { post: "/hello" body: "*" };
   }
