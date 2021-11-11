@@ -19,6 +19,7 @@ const _ = http.SupportPackageIsVersion1
 
 type GreeterHTTPServer interface {
 	GetHello(context.Context, *HelloRequest) (*HelloReply, error)
+	GetHelloA(context.Context, *CreateClusterRes) (*CreateClusterRes, error)
 	SetHello(context.Context, *HelloRequest) (*CreateClusterRes, error)
 }
 
@@ -26,6 +27,7 @@ func RegisterGreeterHTTPServer(s *http.Server, srv GreeterHTTPServer) {
 	r := s.Route("/")
 	r.GET("/hello/{name}", _Greeter_GetHello0_HTTP_Handler(srv))
 	r.POST("/hello", _Greeter_SetHello0_HTTP_Handler(srv))
+	r.GET("/", _Greeter_GetHelloA0_HTTP_Handler(srv))
 }
 
 func _Greeter_GetHello0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
@@ -69,8 +71,28 @@ func _Greeter_SetHello0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Greeter_GetHelloA0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateClusterRes
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/hello.v1.Greeter/GetHelloA")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetHelloA(ctx, req.(*CreateClusterRes))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateClusterRes)
+		return ctx.Result(200, reply)
+	}
+}
+
 type GreeterHTTPClient interface {
 	GetHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
+	GetHelloA(ctx context.Context, req *CreateClusterRes, opts ...http.CallOption) (rsp *CreateClusterRes, err error)
 	SetHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *CreateClusterRes, err error)
 }
 
@@ -87,6 +109,19 @@ func (c *GreeterHTTPClientImpl) GetHello(ctx context.Context, in *HelloRequest, 
 	pattern := "/hello/{name}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation("/hello.v1.Greeter/GetHello"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) GetHelloA(ctx context.Context, in *CreateClusterRes, opts ...http.CallOption) (*CreateClusterRes, error) {
+	var out CreateClusterRes
+	pattern := "/"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation("/hello.v1.Greeter/GetHelloA"))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

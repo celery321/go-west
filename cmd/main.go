@@ -7,13 +7,14 @@ import (
 	"github.com/SkyAPM/go2sky/reporter"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/gorilla/mux"
 	"go-west/internal/conf"
 	"go-west/internal/server"
 	"go-west/internal/service"
 	"go-west/pkg/boot"
-	skywalk "go-west/pkg/http/middleware/skywalking"
 	"go-west/pkg/log"
 	"gopkg.in/yaml.v3"
+	"net/http"
 	"time"
 )
 
@@ -63,8 +64,12 @@ func main() {
 	logger := log.With(loggerInstance,
 		"service.name", Name,
 		"service.version", Version,
-		"trace.id",   skywalk.TraceID() ,
+		//"trace.id",   skywalk.TraceID() ,
 	)
+	router := mux.NewRouter()
+	router.HandleFunc("/home", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(w, "Hello Gorilla Mux!")
+	}).Methods("GET")
 	svc := service.New(bc.Data, logger)
 	httpSrv := server.NewHTTPServer(bc.Server, svc, logger, tracer)
 	grpcSrv := server.NewGRPCServer(bc.Server, svc, logger, tracer)

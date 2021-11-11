@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	xtime "github.com/go-kratos/kratos/pkg/time"
+	xtime "go-west/pkg/time"
 )
 
 // Config broker config.

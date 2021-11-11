@@ -3,6 +3,7 @@ VERSION=$(shell git describe --tags --always)
 APP_RELATIVE_PATH=$(shell a=`basename $$PWD` && cd .. && b=`basename $$PWD` && echo $$b/$$a)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES=$(shell     find api -name *.proto)
+API_PROTO_FILES2=$(shell     find internal/conf -name *.proto)
 KRATOS_VERSION=$(shell go mod graph |grep go-kratos/kratos/v2 |head -n 1 |awk -F '@' '{print $$2}')
 KRATOS=$(GOPATH)/pkg/mod/github.com/go-kratos/kratos/v2@$(KRATOS_VERSION)
 APP_NAME=$(shell echo $(APP_RELATIVE_PATH) | sed -En "s/\//-/p")
@@ -108,7 +109,7 @@ validate:
 	protoc --proto_path=. \
            --proto_path=third_party \
            --validate_out=paths=source_relative,lang=go:. \
-           $(API_PROTO_FILES)
+           $(API_PROTO_FILES)  $(API_PROTO_FILES2)
 
 # show help
 help:
@@ -132,4 +133,6 @@ help:
 .PHONY: upload
 # upload to yapi
 upload:
+
+
 

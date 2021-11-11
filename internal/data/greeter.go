@@ -2,13 +2,17 @@ package data
 
 import (
 	"context"
+	v1 "go-west/api/v1"
 	"go-west/internal/biz"
+	"go-west/pkg/database/sql"
 	"go-west/pkg/log"
 )
 
 const (
 	_addStu  = "INSERT INTO stu SET name=?"
 	_getStus = "SELECT name FROM stu where name=?"
+	_sleep = "select sleep(?)"
+	_sleep1 = "select ?"
 )
 var _ biz.GreeterRepo = (*greeterRepo)(nil)
 
@@ -17,9 +21,27 @@ type greeterRepo struct {
 	log  *log.Helper
 }
 
-func (r *greeterRepo) SetGreeter(ctx context.Context, g *biz.Greeter) error {
-	_, err := r.data.db.Exec(ctx, _addStu, g.Hello)
-	return err
+func (r *greeterRepo) SetGreeter(ctx context.Context, g *biz.Greeter) (err error ){
+	//go r.data.Ping(ctx)
+	var tx           *sql.Tx
+
+	if tx, err = r.data.db.Begin(ctx); err != nil {
+		return
+	}
+	//time.Sleep(8 * time.Second)
+	_, err = tx.Exec(_sleep1, g.Hello)
+	if err != nil {
+		tx.Rollback()
+		r.log.Errorf("SetGreeter: rows.Scan() error(%v)", err)
+		return v1.ErrorContentMissing("SetGreeter")
+	}
+
+	if err = tx.Commit(); err != nil {
+		return
+	}
+	return
+
+
 }
 
 // NewGreeterRepo .
@@ -32,10 +54,9 @@ func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
 
 func (r *greeterRepo) GetGreeter(ctx context.Context, g *biz.Greeter) (l []*biz.Greeter, err error) {
 	l = make([]*biz.Greeter, 0)
-	rows, err := r.data.db.Query(ctx, _getStus, g.Hello)
+	rows, err := r.data.db.Query(ctx, _sleep1, g.Hello)
 	if err != nil {
-		r.log.Error("d.biliDM.Query(%v,%v) error(%v)", _getStus,  g.Hello, err)
-		return l, err
+		return l, v1.ErrorUserNotFound("user %s not found", err, _sleep, g.Hello)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -49,6 +70,9 @@ func (r *greeterRepo) GetGreeter(ctx context.Context, g *biz.Greeter) (l []*biz.
 	if err = rows.Err(); err != nil {
 		r.log.Error("rows.Err() error(%v)", err)
 	}
+
+	// redis
+
 	return l, err
 }
 

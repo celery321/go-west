@@ -25,14 +25,20 @@ func (s *Service) GetHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloR
 	l, err := s.uc.Create(ctx, b)
  	if err != nil {
 		s.log.WithContext(ctx).Errorf("s.uc.Create", err)
+		return &v1.HelloReply{}, err
 	}
-	for _, v := range(l) {
+	for _, v := range l {
 		s.log.WithContext(ctx).Info("l", v.Hello)
 	}
 
 	req := &v1.HelloReply{}
 	req.ReqId = go2sky.TraceID(ctx)
 	req.Message = "Hello" + in.GetName()
+
+
+	// redis
+
+	s.data.PingRedis(ctx)
 	return req, nil
 }
 
@@ -43,6 +49,7 @@ func (s *Service) SetHello(ctx context.Context, in *v1.HelloRequest)  (*v1.Creat
 	err := s.uc.Set(ctx, req)
 	if err != nil {
 		s.log.WithContext(ctx).Errorf("s.uc.Set", err)
+		return &v1.CreateClusterRes{}, err
 	}
 
 	return &v1.CreateClusterRes{}, nil

@@ -20,6 +20,11 @@ service Greeter {
   rpc SetHello (HelloRequest) returns (CreateClusterRes) {
     option (google.api.http) = { post: "/hello" body: "*" };
   }
+  // get 服务A
+  rpc GetHelloA (CreateClusterRes) returns (CreateClusterRes)  {
+    option (google.api.http) = { get: "/" };
+  }
+
 }
 
 
@@ -29,7 +34,7 @@ message CreateClusterRes {
 // The request message containing the user's name.
 message HelloRequest {
   // 名字
-  string name = 1  [(validate.rules).string.min_len = 3];
+  string name = 1  [ (validate.rules).string.min_len = 1];
 }
 
 

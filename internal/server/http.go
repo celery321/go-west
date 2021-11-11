@@ -4,6 +4,7 @@ import (
 	"github.com/SkyAPM/go2sky"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	v1 "go-west/api/v1"
 	"go-west/internal/conf"
 	"go-west/internal/service"
@@ -11,7 +12,6 @@ import (
 	"go-west/pkg/http/middleware/metadata"
 	skywalk "go-west/pkg/http/middleware/skywalking"
 	"go-west/pkg/http/middleware/validate"
-	"go-west/pkg/http/response"
 	"go-west/pkg/log"
 )
 
@@ -36,11 +36,14 @@ func NewHTTPServer(c *conf.Server, greeter *service.Service, logger log.Logger, 
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	// error
-	opts = append(opts, http.ErrorEncoder(response.ErrorEncoder))
+	//opts = append(opts, http.ErrorEncoder(response.ErrorEncoder))
 	// response
-	opts = append(opts, http.ResponseEncoder(response.ResponseEncoder))
+	//opts = append(opts, http.ResponseEncoder(response.ResponseEncoder))
 
 	srv := http.NewServer(opts...)
+	srv.Handle("/metrics", promhttp.Handler())
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+
 	return srv
 }
+

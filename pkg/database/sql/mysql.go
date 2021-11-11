@@ -1,15 +1,22 @@
 package sql
 
 import (
-	"github.com/go-kratos/kratos/pkg/log"
-	"github.com/go-kratos/kratos/pkg/net/netutil/breaker"
-	"github.com/go-kratos/kratos/pkg/time"
+	"go-west/pkg/breaker"
+	"go-west/pkg/stat"
+	"go-west/pkg/time"
+
 	// database driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var (
+	stats = stat.DB
+
+)
+
 // Config mysql config.
 type Config struct {
+	Addr         string          // for trace
 	DSN          string          // write data source name.
 	ReadDSN      []string        // read data source name.
 	Active       int             // pool
@@ -21,33 +28,15 @@ type Config struct {
 	Breaker      *breaker.Config // breaker
 }
 
-type Option func(o *Config)
-
-// DSN Address with server address.
-func DSN(dsn string) Option {
-	return func(s *Config) {
-		s.DSN = dsn
-	}
-}
-
-
 // NewMySQL new db and retry connection when has error.
-func NewMySQL(opts ...Option) (db *DB) {
-	options := &Config{
-			IdleTimeout: 400,
-			QueryTimeout: 50000000,
-			ExecTimeout: 50000000,
-			TranTimeout: 50000000,
-	}
-	for _, o := range opts {
-		o(options)
-	}
-	if options.QueryTimeout == 0 || options.ExecTimeout == 0 || options.TranTimeout == 0 {
+func NewMySQL(c *Config) (db *DB) {
+
+	if c.QueryTimeout == 0 || c.ExecTimeout == 0 || c.TranTimeout == 0 {
 		panic("mysql must be set query/execute/transction timeout")
 	}
-	db, err := Open(options)
+	db, err := Open(c)
 	if err != nil {
-		log.Error("open mysql error(%v)", err)
+		//log.Error("open mysql error(%v)", err)
 		panic(err)
 	}
 	return

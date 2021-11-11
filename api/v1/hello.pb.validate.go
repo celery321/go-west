@@ -156,10 +156,10 @@ func (m *HelloRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetName()) < 3 {
+	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := HelloRequestValidationError{
 			field:  "Name",
-			reason: "value length must be at least 3 runes",
+			reason: "value length must be at least 1 runes",
 		}
 		if !all {
 			return err

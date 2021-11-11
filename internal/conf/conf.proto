@@ -4,6 +4,7 @@ package kratos.api;
 option go_package = "app/cart/service/internal/conf;conf";
 
 import "google/protobuf/duration.proto";
+import "validate/validate.proto";
 
 message Bootstrap {
     Trace trace = 1;
@@ -43,25 +44,46 @@ message Data {
         string database = 2;
     }
     message Mysql {
+        message Breaker {
+            bool SwitchOff = 1; // breaker switch,default off.
+            float K = 2;  // Google
+            google.protobuf.Duration Window = 3;
+            int32 Bucket = 4;
+            int64 Request  = 5;
+        }
         string       dsn   = 1;
-        repeated string ReadDSN = 2;
-        int64 Active              = 3;
-        int64 Idle                = 4;
-        google.protobuf.Duration IdleTimeout = 5;
-        google.protobuf.Duration QueryTimeout = 6;
-        google.protobuf.Duration ExecTimeout   = 7;
-        google.protobuf.Duration TranTimeout   = 8;
-        Breaker     Breaker = 9;
+        repeated string readDSN = 2;
+        int64 active              = 3;
+        int64 idle                = 4;
+        string idleTimeout = 5  ;
+        string queryTimeout = 6;
+        string execTimeout   = 7;
+        string tranTimeout   = 8;
+        Breaker     breaker = 9;
     }
-    message Breaker {
-        bool SwitchOff = 1; // breaker switch,default off.
-        float K = 2;  // Google
-        google.protobuf.Duration Window = 3;
-        int32 Bucket = 4;
-        int64 Request  = 5;
+
+    message Redis {
+        message Config   {
+            int32  active = 1;
+            int32 idle = 2;
+            string idleTimeout = 3;
+            string waitTimeout = 4;
+            bool wait = 5;
+        }
+        string name  = 1;
+        string proto = 2;
+        string addr = 3;
+        string auth = 4;
+        int32 db = 5;
+        string dialTimeout  = 6;
+        string readTimeout = 7;
+        string writeTimeout = 8;
+        int64 slowLog = 9;
+        Config config =  10;
     }
     MongoDB mongodb = 1;
     Mysql mysql = 2;
+    Redis redis = 3;
 }
 
 message Registry {

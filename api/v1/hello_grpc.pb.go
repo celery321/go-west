@@ -21,7 +21,10 @@ type GreeterClient interface {
 	// get 服务
 	GetHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	// set 服务
+	// todo google.protobuf.Empty 代替CreateClusterRes
 	SetHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*CreateClusterRes, error)
+	// get 服务A
+	GetHelloA(ctx context.Context, in *CreateClusterRes, opts ...grpc.CallOption) (*CreateClusterRes, error)
 }
 
 type greeterClient struct {
@@ -50,6 +53,15 @@ func (c *greeterClient) SetHello(ctx context.Context, in *HelloRequest, opts ...
 	return out, nil
 }
 
+func (c *greeterClient) GetHelloA(ctx context.Context, in *CreateClusterRes, opts ...grpc.CallOption) (*CreateClusterRes, error) {
+	out := new(CreateClusterRes)
+	err := c.cc.Invoke(ctx, "/hello.v1.Greeter/GetHelloA", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -57,7 +69,10 @@ type GreeterServer interface {
 	// get 服务
 	GetHello(context.Context, *HelloRequest) (*HelloReply, error)
 	// set 服务
+	// todo google.protobuf.Empty 代替CreateClusterRes
 	SetHello(context.Context, *HelloRequest) (*CreateClusterRes, error)
+	// get 服务A
+	GetHelloA(context.Context, *CreateClusterRes) (*CreateClusterRes, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -70,6 +85,9 @@ func (UnimplementedGreeterServer) GetHello(context.Context, *HelloRequest) (*Hel
 }
 func (UnimplementedGreeterServer) SetHello(context.Context, *HelloRequest) (*CreateClusterRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetHello not implemented")
+}
+func (UnimplementedGreeterServer) GetHelloA(context.Context, *CreateClusterRes) (*CreateClusterRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHelloA not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -120,6 +138,24 @@ func _Greeter_SetHello_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_GetHelloA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateClusterRes)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).GetHelloA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/hello.v1.Greeter/GetHelloA",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).GetHelloA(ctx, req.(*CreateClusterRes))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +170,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetHello",
 			Handler:    _Greeter_SetHello_Handler,
+		},
+		{
+			MethodName: "GetHelloA",
+			Handler:    _Greeter_GetHelloA_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

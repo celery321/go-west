@@ -1,0 +1,24 @@
+package service
+
+import (
+	"context"
+	v1 "go-west/api/v1"
+	"go-west/internal/biz"
+)
+
+func (s *Service) NStart(ctx context.Context, in *v1.BattleRequest) (out *v1.BattleReply, err error) {
+	out = &v1.BattleReply{}
+	g := &biz.BattleRequest{}
+	g.MonsterA = in.MonsterA
+	g.MonsterB = in.MonsterB
+	g.Address = in.Address
+	g.BattleLevel = in.BattleLevel
+
+ 	s.uc.NStart(ctx, g)
+
+	return out, nil
+}
+
+func (s *Service) Start(ctx context.Context, request *v1.BattleRequest) (*v1.BattleReply, error) {
+	panic("implement me")
+}

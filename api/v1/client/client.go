@@ -21,29 +21,40 @@ package main
 
 import (
 	"context"
+	"fmt"
 	pb "go-west/api/v1"
-	"log"
+	"go-west/pkg/http/middleware/logging"
+	"go-west/pkg/log"
 	"os"
 	"time"
 
-	"google.golang.org/grpc"
+	transgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
 
 )
 
 const (
-	//address     = "grpc.vonechain.me:80"
-	address     = "192.168.50.16:909"
+	address     = "rpc.vone.me:80"
+	//address     = "192.168.50.16:909"
 	defaultName = "world"
 )
 
 func main() {
 	// Set up a connection to the server.
 	//conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	logger := log.DefaultLogger
+	conn, err := transgrpc.DialInsecure(
+		context.Background(),
+		transgrpc.WithEndpoint(address),
+		transgrpc.WithMiddleware(
+			logging.Client(logger),
+		),
+	)
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		panic(err)
 	}
 	defer conn.Close()
+
+
 	c := pb.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.
@@ -53,9 +64,9 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
+	r, err := c.GetHello(ctx, &pb.HelloRequest{Name: name})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		fmt.Printf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	fmt.Printf("Greeting: %s", r.GetMessage())
 }

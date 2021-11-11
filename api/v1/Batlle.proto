@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package hello.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+option go_package = ".;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.helloworld.v1";
+option java_outer_classname = "HelloWorldProtoV1";
+
+// The greeting service definition.
+service Battle {
+  // 开始战斗
+  rpc Start(BattleRequest) returns (BattleReply)  {
+    option (google.api.http) = { post: "/usm-api/startBattle" body: "*" };
+  }
+
+  rpc NStart(BattleRequest) returns (BattleReply)  {
+    option (google.api.http) = { get: "/nstart"};
+  }
+
+
+}
+
+
+
+// The request message containing the user's name.
+message BattleRequest {
+    // 元兽A
+    string monsterA  = 1;
+    // 元兽B
+    string monsterB  = 2;
+    // 钱包地址
+    string  address = 3;
+    // 战斗等级
+    uint32 battleLevel = 4;
+}
+
+
+
+// The response message containing the greetings
+message BattleReply {
+    // 返回值
+    string code = 1;
+    message Data {
+      uint32 battleLevel = 1;
+      uint32 bpFragmentNum = 2;
+      uint32  bpPotionNum = 3;
+      uint32 challengeExp = 4;
+      uint32 challengeLevel = 5;
+    }
+    Data data = 2;
+    string errorText = 3;
+    string message = 4;
+    int32 result = 5;
+
+}
